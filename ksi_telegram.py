@@ -80,8 +80,11 @@ while True:
                 message = template.format(title=title, link=link, user=user)
 
                 print("Posting {}".format(link))
+                print("Channel: {}".format(channel))
+                print("Message: {}".format(message))
                 bot.sendPhoto(chat_id=channel, photo=submission.url, caption=message)
                 # bot.sendMessage(chat_id=channel, parse_mode=telegram.ParseMode.HTML, text=message)
+                print("writing")
                 write_submissions(submission.id)
                 sleep(600)
             except Exception as e:
