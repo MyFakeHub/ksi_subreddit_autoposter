@@ -1,1 +1,1 @@
-worker: python telegram.py
+worker: python ksi_telegram.py
