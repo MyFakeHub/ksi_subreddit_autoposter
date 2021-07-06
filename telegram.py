@@ -2,7 +2,6 @@ from __future__ import unicode_literals
 
 import telegram
 import praw
-import logging
 import html
 import sys
 import os
@@ -10,12 +9,6 @@ import json
 
 from time import sleep
 from datetime import datetime
-
-ch = logging.StreamHandler(sys.stdout)
-ch.setLevel(logging.DEBUG)
-formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
-ch.setFormatter(formatter)
-log.addHandler(ch)
 
 credentials["token"] = os.environ.get('TOKEN')
 credentials["subreddit"] = os.environ.get('SUB')
@@ -34,9 +27,6 @@ channel = credentials["channel"]
 sub = "dogpictures"
 start_time = datetime.utcnow().timestamp()
 
-log = logging.getLogger('doggo')
-log.setLevel(logging.DEBUG)
-
 
 def prev_submissions():
     try:
@@ -50,16 +40,15 @@ def write_submissions(sub_id):
         with open('prev_submissions.id', 'w') as f:
             f.write(sub_id)
     except:
-        log.expection("Error writing sub ID!")
+        print('exception: Error writing sub ID!')
 
 post = False
 last_sub_id = prev_submissions()
 
 if not last_sub_id:
-    log.info("Latest submission not found, starting all submissions!")
     post = True
 else:
-    log.info("Last posted submission is {}".format(last_sub_id))
+    print("Last posted submission is {}".format(last_sub_id))
 
 r = praw.Reddit(user_agent="Dank Doggo by Harsha :D",
                 client_id=os.environ.get('CLIENT_ID'),
@@ -77,7 +66,7 @@ while True:
             try:
                 link = "https://redd.it/{id}".format(id=submission.id)
                 if not post and submission.created_utc < start_time:
-                    log.info("Skipping {} --- latest submission not found!".format(submission.id))
+                    print("Skipping {} --- latest submission not found!".format(submission.id))
                     if submission.id == last_sub_id:
                         post = True
                     continue
@@ -88,13 +77,13 @@ while True:
                 template = "{title}\n{link}\nby {user}"
                 message = template.format(title=title, link=link, user=user)
 
-                log.info("Posting {}".format(link))
+                print("Posting {}".format(link))
                 bot.sendPhoto(chat_id=channel, photo=submission.url, caption=message)
                 # bot.sendMessage(chat_id=channel, parse_mode=telegram.ParseMode.HTML, text=message)
                 write_submissions(submission.id)
                 sleep(600)
             except Exception as e:
-                log.exception("Error parsing {}".format(link))
+                print("Exception: Error parsing {}".format(link))
     except Exception as e:
-        log.exception("Error fetching new submissions, restarting in 10 secs")
+        print("Exception: Error fetching new submissions, restarting in 10 secs")
         sleep(10)
