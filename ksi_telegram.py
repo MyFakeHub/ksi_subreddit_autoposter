@@ -27,7 +27,7 @@ if credentials["channel"] == "":
 token = credentials["token"]
 print(token)
 channel = credentials["channel"]
-sub = "ksi"
+sub = credentials["subreddit"]
 start_time = datetime.utcnow().timestamp()
 
 
