@@ -89,6 +89,7 @@ while True:
                 sleep(600)
             except Exception as e:
                 print("Exception: Error parsing {}".format(link))
+                print(e)
     except Exception as e:
         print("Exception: Error fetching new submissions, restarting in 10 secs")
         sleep(10)
