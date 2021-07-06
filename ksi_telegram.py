@@ -87,7 +87,7 @@ while True:
                 bot.sendPhoto(chat_id=channel, photo=submission.url, caption=message)
                 # bot.sendMessage(chat_id=channel, parse_mode=telegram.ParseMode.HTML, text=message)
                 write_submissions(submission.id)
-                sleep(1)
+                sleep(60)
             except Exception as e:
                 print("Exception: Error parsing {}".format(link))
                 print(e)
