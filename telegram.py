@@ -10,6 +10,8 @@ import json
 from time import sleep
 from datetime import datetime
 
+credentials = {}
+
 credentials["token"] = os.environ.get('TOKEN')
 credentials["subreddit"] = os.environ.get('SUB')
 credentials["channel"] = os.environ.get('CHANNEL')
