@@ -25,7 +25,6 @@ if credentials["channel"] == "":
 
 
 token = credentials["token"]
-print(token)
 channel = credentials["channel"]
 sub = credentials["subreddit"]
 start_time = datetime.utcnow().timestamp()
@@ -84,7 +83,7 @@ while True:
                 bot.sendPhoto(chat_id=channel, photo=submission.url, caption=message)
                 # bot.sendMessage(chat_id=channel, parse_mode=telegram.ParseMode.HTML, text=message)
                 write_submissions(submission.id)
-                sleep(60)
+                sleep(30)
             except Exception as e:
                 print("Exception: Error parsing {}".format(link))
                 print(e)
