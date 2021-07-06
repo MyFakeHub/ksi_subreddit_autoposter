@@ -65,8 +65,6 @@ bot = telegram.Bot(token=token)
 while True:
     try:
         for submission in subreddit.hot():
-            if submission.created_utc < start_time:
-                continue
             try:
                 link = "https://redd.it/{id}".format(id=submission.id)
                 if not post and submission.created_utc < start_time:
