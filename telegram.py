@@ -17,9 +17,17 @@ formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
 ch.setFormatter(formatter)
 log.addHandler(ch)
 
-credentials["token"] = '1897951964:AAGEjgpBCutq8vXHU0mE_RMfpqxsSZPzeV4'
-credentials["subreddit"] = 'ksi'
-credentials["channel"] = 'ksi_subreddit'
+credentials["token"] = os.environ.get('TOKEN')
+credentials["subreddit"] = os.environ.get('SUB')
+credentials["channel"] = os.environ.get('CHANNEL')
+
+if credentials["token"] == "": 
+    raise RuntimeError('Bot token not found 🙁! Put bot token🔐 in credentials.json!')
+if credentials["subreddit"] == "":
+    raise RuntimeError('Subreddit name not found 🙁! Enter the subreddit name📃 in credentials.json!')
+if credentials["channel"] == "":
+    raise RuntimeError('Telegram Channel name not found 🙁! Enter the channel name📰 in credentials.json!')
+
 
 token = credentials["token"]
 channel = credentials["channel"]
