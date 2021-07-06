@@ -63,6 +63,7 @@ subreddit = r.subreddit(sub)
 bot = telegram.Bot(token=token)
 
 while True:
+    print('New cycle')
     try:
         for submission in subreddit.hot():
             if submission.created_utc < start_time:
