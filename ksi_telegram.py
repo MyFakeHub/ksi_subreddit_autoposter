@@ -26,7 +26,7 @@ if credentials["channel"] == "":
 
 token = credentials["token"]
 channel = credentials["channel"]
-sub = "dogpictures"
+sub = "ksi"
 start_time = datetime.utcnow().timestamp()
 
 
