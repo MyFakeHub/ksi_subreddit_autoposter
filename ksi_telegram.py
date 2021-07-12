@@ -64,9 +64,6 @@ while True:
                     continue
 
                 link = "https://redd.it/{id}".format(id=submission.id)
-                if submission.created_utc < start_time:
-                    print("Skipping {} --- latest submission not found!".format(submission.id))
-                    continue
                 
                 image = html.escape(submission.url or '')
                 title = html.escape(submission.title or '')
