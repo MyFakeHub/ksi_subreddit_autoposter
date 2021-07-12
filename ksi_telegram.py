@@ -74,7 +74,7 @@ while True:
 
                 print("Posting {}".format(link))
                 bot.sendPhoto(chat_id=channel, photo=submission.url, caption=message)
-                prev_submissions.add(submission.id)
+                prev_submissions.append(submission.id)
                 sleep(60)
             except Exception as e:
                 print("Exception: Error parsing {}".format(link))
