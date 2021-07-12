@@ -6,6 +6,7 @@ import html
 import sys
 import os
 import json
+import pickle
 
 from time import sleep
 from datetime import datetime
@@ -30,27 +31,19 @@ sub = credentials["subreddit"]
 start_time = datetime.utcnow().timestamp()
 
 
-def prev_submissions():
+def get_prev_submissions():
     try:
-        with open('prev_submissions.id', 'r') as f:
-            return f.read().strip()
+        with open('prev_submissions.pickle', 'rb') as f:
+            return pickle.load(f)
     except:
-        return None
+        return []
 
-def write_submissions(sub_id):
+def write_submissions(sub_ids):
     try:
-        with open('prev_submissions.id', 'w') as f:
-            f.write(sub_id)
+        with open('prev_submissions.pickle', 'wb') as f:
+            pickle.dump(sub_ids, f)
     except:
         print('exception: Error writing sub ID!')
-
-post = False
-last_sub_id = prev_submissions()
-
-if not last_sub_id:
-    post = True
-else:
-    print("Last posted submission is {}".format(last_sub_id))
 
 r = praw.Reddit(user_agent="Dank Doggo by Harsha :D",
                 client_id=os.environ.get('CLIENT_ID'),
@@ -64,14 +57,17 @@ bot = telegram.Bot(token=token)
 
 while True:
     try:
+        prev_submissions = get_prev_submissions()
         for submission in subreddit.hot():
             try:
-                link = "https://redd.it/{id}".format(id=submission.id)
-                if not post and submission.created_utc < start_time:
-                    print("Skipping {} --- latest submission not found!".format(submission.id))
-                    if submission.id == last_sub_id:
-                        post = True
+                if submission.id in prev_submissions:
                     continue
+
+                link = "https://redd.it/{id}".format(id=submission.id)
+                if submission.created_utc < start_time:
+                    print("Skipping {} --- latest submission not found!".format(submission.id))
+                    continue
+                
                 image = html.escape(submission.url or '')
                 title = html.escape(submission.title or '')
                 user = html.escape(submission.author.name or '')
@@ -81,12 +77,13 @@ while True:
 
                 print("Posting {}".format(link))
                 bot.sendPhoto(chat_id=channel, photo=submission.url, caption=message)
-                # bot.sendMessage(chat_id=channel, parse_mode=telegram.ParseMode.HTML, text=message)
-                write_submissions(submission.id)
+                prev_submissions.add(submission.id)
                 sleep(60)
             except Exception as e:
                 print("Exception: Error parsing {}".format(link))
                 print(e)
+        
+        write_submissions(prev_submissions)
     except Exception as e:
         print("Exception: Error fetching new submissions, restarting in 10 secs")
         sleep(10)
